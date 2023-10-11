@@ -3,8 +3,8 @@ import math
 from sklearn.preprocessing import MinMaxScaler
 
 # m, n, 및 Aij 값 설정
-m = 15  # 대안 개수
-n = 9 # 성능 지표 개수
+m = 4# 대안 개수
+n = 8# 성능 지표 개수
 def calculate_entropy(p_matrix):
     entropy = np.zeros_like(p_matrix)  # 결과 배열 초기화
     for i, p_value in enumerate(p_matrix):
@@ -48,6 +48,11 @@ Aij_values = [
     [3.49, 4558.43, 88.15, 0.32, 0.10, 4.45, 69.27, 0.51, 21.74],
     [2.58, 128.20, 16.33, 0.07, 2.87, 0.05, 12.64, 0.99, 3.71],
     [30.02, 10220.44, 120.07, 0.37, 68 * 10 ** 15, 3.49, 116.14, 0.10, 32.54]
+
+    # [410,5326,10.98,17.30,1150,0.018,0.98,1.01],
+    # [420,5558,7.92,17.20,1165,0.012,0.97,1],
+    # [415,5582,9.15,15.40,1160,0.021,0.99,1.02],
+    # [413,5443,10.73,16.40,1090,0.017,0.95,1.04]
 ]
 
 np.set_printoptions(formatter={'all': lambda x: f'{x:.9f}'})
@@ -72,22 +77,23 @@ for i in range(m):
     entropy = calculate_entropy(p_matrix)
     for j in range(n):
         M_ij[i][j] = entropy[j]
+print("-------------------------")
+print(M_ij)
 
 
-E_ij = np.sum(M_ij, axis=0) * -k
-
-
-
+E_ij = -k * np.sum(M_ij, axis=0)
+abs_E_ij = np.abs(E_ij)
+print("-------------------------")
+print(abs_E_ij)
+E_ij_minus_1 =1 - abs_E_ij
+print("-------------------------")
 # print(entropies)
-print(E_ij)
+print(E_ij_minus_1)
 print("-------------------------")
 w = np.zeros(n)
 for j in range(n):
-    w[j] = (E_ij[j]) / sum(E_ij)
+    w[j] = (E_ij_minus_1[j]) / sum(E_ij_minus_1 )
 
-# for i in range(m):
-#     for j in range(n):
-#         w[i] = E_ij / sum(E_ij)
 print(w)
 
-# total_entropy = np.sum(entropies)
+
