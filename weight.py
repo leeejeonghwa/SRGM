@@ -116,4 +116,5 @@ print(weight)
 
 w_1 = np.abs(weight)
 
+print("-------------------------")
 
