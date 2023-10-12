@@ -7,6 +7,8 @@ from scipy.optimize import curve_fit
 def yamada_imperfect_debugging2_model(t, a, b, c):
     return a * (1 - np.exp(-b * t)) * (1 - (c / b)) + c * a * t
 
+
+
 # Load your observed cumulative failure data
 # Replace this with your actual data
 #cumulative_failures_data = np.array([0,16,24,27,33,41,49,54,58,69,75,81,86,90,93,96,98,99,100,100,100])
@@ -22,7 +24,7 @@ split_index = 20# For example, split after the 15th data point
 X, y= timesteps, cumulative_failures_data
 # Split the data into training and testing sets
 X_train, y_train = timesteps[:split_index], cumulative_failures_data[:split_index]
-X_test, y_test = timesteps[split_index-1:], cumulative_failures_data[split_index-1:]
+X_test, y_test = timesteps[split_index:], cumulative_failures_data[split_index:]
 
 
 # Perform curve fitting to optimize parameters (a and b) using only the training data
@@ -39,6 +41,8 @@ k = len(X_test) # 데이터 포인트 수
 p_data = failures_predictions_test  # 모델의 예측값
 r_data= y_test  # 실제 값
 p= 3  #파라미터의 갯수
+
+
 
 bias = np.sum(p_data - r_data) / k
 

@@ -60,11 +60,13 @@ numerator = np.sum((failures_predictions_test - y_test)**2)
 denominator = np.sum(y_test**2)
 ts = np.sqrt(numerator / denominator) * 100
 
+
+I_f = a_optimized * b_optimized * np.exp(b_optimized * timesteps)
 # Calculate Noise (Standard Deviation of Residuals)
 noise = 0
 for i in range(1, len(X_test)):
-    lambda_ti = failures_predictions_test[i]  # 현재 시간 스텝에서 모델의 예측값
-    lambda_ti_minus_1 = failures_predictions_test[i - 1]  # 이전 시간 스텝에서 모델의 예측값
+    lambda_ti = a_optimized * b_optimized * np.exp(b_optimized * i)  # 현재 시간 스텝에서 모델의 예측값
+    lambda_ti_minus_1 = a_optimized * b_optimized * np.exp(b_optimized * (i-1))    # 이전 시간 스텝에서 모델의 예측값
 
     if lambda_ti_minus_1 != 0:
         noise += np.abs((lambda_ti - lambda_ti_minus_1) / lambda_ti_minus_1)
@@ -92,3 +94,6 @@ print(f"Percent Relative Error (PRR): {round(prr, 3)}")
 print(f"Variance: {round(variance, 3)}")
 print(f"R-squared (Rsq): {round(rsq, 3)}")
 print(f"True Skill Statistic (TS): {round(ts, 3)}")
+
+M2_results_list = [round(bias, 3), round(mse, 3),round(meop, 3),round(mae, 3),round(noise, 3),round(prr, 3),round(variance, 3),round(rsq, 3),round(ts, 3)]
+print(M2_results_list)

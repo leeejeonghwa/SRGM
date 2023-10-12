@@ -3,8 +3,8 @@ import math
 from sklearn.preprocessing import MinMaxScaler
 
 # m, n, 및 Aij 값 설정
-m = 15  # 대안 개수
-n = 9 # 성능 지표 개수
+m = 4# 대안 개수
+n = 8# 성능 지표 개수
 def calculate_entropy(p_matrix):
     entropy = np.zeros_like(p_matrix)  # 결과 배열 초기화
     for i, p_value in enumerate(p_matrix):
@@ -89,22 +89,23 @@ for i in range(m):
     entropy = calculate_entropy(p_matrix)
     for j in range(n):
         M_ij[i][j] = entropy[j]
+print("-------------------------")
+print(M_ij)
 
 
-E_ij = np.sum(M_ij, axis=0) * -k
-
-
-
+E_ij = -k * np.sum(M_ij, axis=0)
+abs_E_ij = np.abs(E_ij)
+print("-------------------------")
+print(abs_E_ij)
+E_ij_minus_1 =1 - abs_E_ij
+print("-------------------------")
 # print(entropies)
-print(E_ij)
+print(E_ij_minus_1)
 print("-------------------------")
 w = np.zeros(n)
 for j in range(n):
-    w[j] = (E_ij[j]) / sum(E_ij)
+    w[j] = (E_ij_minus_1[j]) / sum(E_ij_minus_1 )
 
-# for i in range(m):
-#     for j in range(n):
-#         w[i] = E_ij / sum(E_ij)
 print(w)
 
-# total_entropy = np.sum(entropies)
+
