@@ -23,7 +23,7 @@ X_test, y_test = timesteps[split_index-1:], cumulative_failures_data[split_index
 
 
 # Perform curve fitting to optimize parameters (a and b) using only the training data
-popt, pcov = curve_fit(yamada_rayleigh_model_cumulative, X_train,y_train ,method = 'trf',bounds=([0, 0, 0, 0], [np.inf, 1 ,np.inf, 1]))
+popt, pcov = curve_fit(yamada_rayleigh_model_cumulative, X_train,y_train ,method = 'trf',bounds=([0, 0, 0, 0], [np.inf, np.inf ,np.inf, np.inf]))
 
 a_optimized, b_optimized,c_optimized, d_optimized=popt
 

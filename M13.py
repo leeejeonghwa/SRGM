@@ -4,7 +4,7 @@ from sklearn.metrics import mean_squared_error
 from scipy.optimize import curve_fit
 
 # Define the Pham Nordmann Zhang model function for cumulative data
-def pham_nordmann_zhang_model(t, a, b, beta, alpha):
+def pham_nordmann_zhang_model_cumulative(t, a, b, beta, alpha):
     numerator = a * (1 - np.exp(-b * t)) * (a - (a / b)) + (alpha * a * t)
     denominator = 1 + (beta * np.exp(-b * t))
     return numerator / denominator
@@ -25,14 +25,14 @@ X_test, y_test = timesteps[split_index-1:], cumulative_failures_data[split_index
 
 
 # Perform curve fitting to optimize parameters (a and b) using only the training data
-popt, pcov = curve_fit(pham_nordmann_zhang_model, X_train, y_train,method = 'trf', bounds=([0, 0, 0, 0], [np.inf, 1, 1, np.inf]))
+popt, pcov = curve_fit(pham_nordmann_zhang_model_cumulative, X_train, y_train,method = 'trf', bounds=([0, 0, 0, 0], [np.inf, np.inf, np.inf, np.inf]),max_nfev=10000)
 
 # Extract optimized parameters
 a_optimized, b_optimized, c_optimized, d_optimized = popt
 
 # Generate predictions using the optimized parameters for both training and testing data
-failures_predictions_train = pham_nordmann_zhang_model(X_train, a_optimized, b_optimized, c_optimized, d_optimized)
-failures_predictions_test = pham_nordmann_zhang_model(X_test, a_optimized, b_optimized, c_optimized, d_optimized)
+failures_predictions_train = pham_nordmann_zhang_model_cumulative(X_train, a_optimized, b_optimized, c_optimized, d_optimized)
+failures_predictions_test = pham_nordmann_zhang_model_cumulative(X_test, a_optimized, b_optimized, c_optimized, d_optimized)
 
 k = len(X_test) # 데이터 포인트 수
 p_data = failures_predictions_test  # 모델의 예측값
