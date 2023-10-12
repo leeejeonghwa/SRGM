@@ -20,7 +20,7 @@ split_index = 20 # For example, split after the 15th data point
 X, y= timesteps, cumulative_failures_data
 # Split the data into training and testing sets
 X_train, y_train = timesteps[:split_index], cumulative_failures_data[:split_index]
-X_test, y_test = timesteps[split_index-1:], cumulative_failures_data[split_index-1:]
+X_test, y_test = timesteps[split_index:], cumulative_failures_data[split_index:]
 
 
 # Perform curve fitting to optimize parameters (a and b) using only the training data
