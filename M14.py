@@ -23,23 +23,23 @@ split_index = 20# For example, split after the 15th data point
 X, y= timesteps, cumulative_failures_data
 # Split the data into training and testing sets
 X_train, y_train = timesteps[:split_index], cumulative_failures_data[:split_index]
-X_test, y_test = timesteps[split_index-1:], cumulative_failures_data[split_index-1:]
+X_test, y_test = timesteps[split_index:], cumulative_failures_data[split_index:]
 
 
 # Perform curve fitting to optimize parameters (a and b) using only the training data
 popt, pcov = curve_fit(pham_zhang_model_cumulative, X_train, y_train,method = 'trf', bounds=([0, 0, 0, 0, 0], [np.inf, 1, np.inf, np.inf, 1]))
 
 # Extract optimized parameters
-a_optimized, b_optimized, c_optimized, d_optimized, e_optimized = popt
+a_optimized, b_optimized, c_optimized, alpha_optimized, beta_optimized = popt
 
 # Generate predictions using the optimized parameters for both training and testing data
-failures_predictions_train = pham_zhang_model_cumulative(X_train, a_optimized, b_optimized, c_optimized, d_optimized, e_optimized)
-failures_predictions_test = pham_zhang_model_cumulative(X_test, a_optimized, b_optimized, c_optimized, d_optimized, e_optimized)
+failures_predictions_train = pham_zhang_model_cumulative(X_train, a_optimized, b_optimized, c_optimized, alpha_optimized, beta_optimized)
+failures_predictions_test = pham_zhang_model_cumulative(X_test, a_optimized, b_optimized, c_optimized, alpha_optimized, beta_optimized)
 
 k = len(X_test) # 데이터 포인트 수
 p_data = failures_predictions_test  # 모델의 예측값
 r_data= y_test  # 실제 값
-p= 5  #파라미터의 갯수
+p= 2  #파라미터의 갯수
 
 bias = np.sum(p_data - r_data) / k
 
@@ -74,8 +74,8 @@ ts = np.sqrt(numerator / denominator) * 100
 # Calculate Noise (Standard Deviation of Residuals)
 noise = 0
 for i in range(1, len(X_test)):
-    lambda_ti = failures_predictions_test[i]  # 현재 시간 스텝에서 모델의 예측값
-    lambda_ti_minus_1 = failures_predictions_test[i - 1]  # 이전 시간 스텝에서 모델의 예측값
+    lambda_ti =( b_optimized*(c_optimized+a_optimized)*(1+beta_optimized)* np.exp(-b_optimized*i) - (b_optimized*np.exp(-b_optimized*i)*(1+beta_optimized*np.exp(-a_optimized*i)))-alpha_optimized*np.exp(-alpha_optimized*i)*(1+beta_optimized*np.exp(-b_optimized*i))) / (1+beta_optimized*np.exp(-b_optimized*i))# 현재 시간 스텝에서 모델의 예측값
+    lambda_ti_minus_1 = ( b_optimized*(c_optimized+a_optimized)*(1+beta_optimized)* np.exp(-b_optimized*(i-1)) - (b_optimized*np.exp(-b_optimized*(i-1))*(1+beta_optimized*np.exp(-a_optimized*(i-1))))-alpha_optimized*np.exp(-alpha_optimized*(i-1))*(1+beta_optimized*np.exp(-b_optimized*(i-1)))) / (1+beta_optimized*np.exp(-b_optimized*(i-1)))  # 이전 시간 스텝에서 모델의 예측값
 
     if lambda_ti_minus_1 != 0:
         noise += np.abs((lambda_ti - lambda_ti_minus_1) / lambda_ti_minus_1)
@@ -90,7 +90,7 @@ plt.legend()
 plt.show()
 
 # Display the performance metrics
-print(f"Optimized Parameters - a: {a_optimized}, b: {b_optimized}, c: {c_optimized}, d:{d_optimized}, e:{e_optimized}")
+print(f"Optimized Parameters - a: {a_optimized}, b: {b_optimized}, c: {c_optimized}, d:{alpha_optimized}, e:{beta_optimized}")
 print("----------------------------------------------------------------------------------------------------------------")
 print("Bias:", round(bias, 3))
 print(f"Mean Squared Error (MSE): {round(mse, 3)}")
