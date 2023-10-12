@@ -28,11 +28,11 @@ X_test, y_test = timesteps[split_index-1:], cumulative_failures_data[split_index
 popt, pcov = curve_fit(pham_nordmann_zhang_model_cumulative, X_train, y_train,method = 'trf', bounds=([0, 0, 0, 0], [np.inf, np.inf, np.inf, np.inf]),max_nfev=10000)
 
 # Extract optimized parameters
-a_optimized, b_optimized, c_optimized, d_optimized = popt
+a_optimized, b_optimized, beta_optimized, alpha_optimized = popt
 
 # Generate predictions using the optimized parameters for both training and testing data
-failures_predictions_train = pham_nordmann_zhang_model_cumulative(X_train, a_optimized, b_optimized, c_optimized, d_optimized)
-failures_predictions_test = pham_nordmann_zhang_model_cumulative(X_test, a_optimized, b_optimized, c_optimized, d_optimized)
+failures_predictions_train = pham_nordmann_zhang_model_cumulative(X_train, a_optimized, b_optimized, beta_optimized, alpha_optimized)
+failures_predictions_test = pham_nordmann_zhang_model_cumulative(X_test, a_optimized, b_optimized, beta_optimized, alpha_optimized)
 
 k = len(X_test) # 데이터 포인트 수
 p_data = failures_predictions_test  # 모델의 예측값
@@ -48,7 +48,7 @@ mse = mean_squared_error(r_data, p_data)
 meop = np.sum(np.abs(failures_predictions_test - y_test)) / (len(X_test) - p + 1)
 
 # Calculate Absolute Error (AE)
-ae = np.mean(np.abs(p_data - r_data))
+mae = np.mean(np.abs(p_data - r_data))
 
 # Calculate Percent Relative Error (PRR)
 prr = np.sum((p_data - r_data) / p_data)
@@ -71,8 +71,8 @@ ts = np.sqrt(numerator / denominator) * 100
 # Calculate Noise (Standard Deviation of Residuals)
 noise = 0
 for i in range(1, len(X_test)):
-    lambda_ti = failures_predictions_test[i]  # 현재 시간 스텝에서 모델의 예측값
-    lambda_ti_minus_1 = failures_predictions_test[i - 1]  # 이전 시간 스텝에서 모델의 예측값
+    lambda_ti = a_optimized*b_optimized*np.exp(-b_optimized*i)*(1-alpha_optimized/b_optimized)+alpha_optimized/1+beta_optimized*np.exp(-b_optimized*i)+alpha_optimized*b_optimized*beta_optimized*np.exp(-b_optimized*i)*(1-alpha_optimized/b_optimized)*(1-np.exp(-b_optimized*i)+alpha_optimized*i)/(1+beta_optimized*np.exp(-beta_optimized*i))**2  # 현재 시간 스텝에서 모델의 예측값
+    lambda_ti_minus_1 = a_optimized*b_optimized*np.exp(-b_optimized*(i-1))*(1-alpha_optimized/b_optimized)+alpha_optimized/1+beta_optimized*np.exp(-b_optimized*(i-1))+alpha_optimized*b_optimized*beta_optimized*np.exp(-b_optimized*(i-1))*(1-alpha_optimized/b_optimized)*(1-np.exp(-b_optimized*i)+alpha_optimized*(i-1))/(1+beta_optimized*np.exp(-beta_optimized*(i-1)))**2  # 현재 시간 스텝에서 모델의 예측값
 
     if lambda_ti_minus_1 != 0:
         noise += np.abs((lambda_ti - lambda_ti_minus_1) / lambda_ti_minus_1)
@@ -87,12 +87,12 @@ plt.legend()
 plt.show()
 
 # Display the performance metrics
-print(f"Optimized Parameters - a: {a_optimized}, b: {b_optimized}, c: {c_optimized}, d:{d_optimized}")
+print(f"Optimized Parameters - a: {a_optimized}, b: {b_optimized}, c: {beta_optimized}, d:{alpha_optimized}")
 print("-------------------------------------------------------------------")
 print("Bias:", round(bias, 3))
 print(f"Mean Squared Error (MSE): {round(mse, 3)}")
 print(f"Mean Error of Prediction (MEOP): {round(meop, 3)}")
-print(f"Absolute Error (AE): {round(ae, 3)}")
+print(f"Absolute Error (AE): {round(mae, 3)}")
 print(f"Noise (Standard Deviation of Residuals): {round(noise, 3)}")
 print(f"Percent Relative Error (PRR): {round(prr, 3)}")
 print(f"Variance: {round(variance, 3)}")
@@ -100,4 +100,6 @@ print(f"R-squared (Rsq): {round(rsq, 3)}")
 print(f"True Skill Statistic (TS): {round(ts, 3)}")
 
 
+
 M13_results_list = [round(bias, 3), round(mse, 3),round(meop, 3),round(ae, 3),round(noise, 3),round(prr, 3),round(variance, 3),round(rsq, 3),round(ts, 3)]
+
