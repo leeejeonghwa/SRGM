@@ -4,8 +4,8 @@ import numpy as np
 
 
 # m, n, 및 Aij 값 설정
-m = 4# 대안 개수
-n = 8# 성능 지표 개수
+m = 15# 대안 개수
+n = 9# 성능 지표 개수
 def calculate_entropy(p_matrix):
     entropy = np.zeros_like(p_matrix)  # 결과 배열 초기화
     for i, p_value in enumerate(p_matrix):
@@ -82,10 +82,6 @@ print(Aij)
 print("-------------------------")
 
 
-# 배열 출력
-print(Aij)
-print("-------------------------")
-
 # 각 Aij 요소를 정규화
 normalized_Aij = Aij / np.sum(Aij, axis=0)
 print(normalized_Aij)
@@ -112,10 +108,12 @@ print("-------------------------")
 # print(entropies)
 print(E_ij_minus_1)
 print("-------------------------")
-w = np.zeros(n)
+weight = np.zeros(n)
 for j in range(n):
-    w[j] = (E_ij_minus_1[j]) / sum(E_ij_minus_1 )
+    weight[j] = (E_ij_minus_1[j]) / sum(E_ij_minus_1 )
 
-print(w)
+print(weight)
+
+w_1 = np.abs(weight)
 
 

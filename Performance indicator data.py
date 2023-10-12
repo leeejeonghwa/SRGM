@@ -27,3 +27,4 @@ from M9 import M9_results_list
 Aij = np.abs(np.array([M1_results_list, M2_results_list, M3_results_list, M4_results_list, M5_results_list, M6_results_list, M7_results_list, M8_results_list, M9_results_list, M10_results_list, M11_results_list, M12_results_list, M13_results_list, M14_results_list, M15_results_list]))
 
 np.save("Aij.npy", Aij)
+
