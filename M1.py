@@ -39,7 +39,7 @@ r_data= y_test  # 실제 값
 p= 3  #파라미터의 갯수
 bias = np.sum(p_data - r_data)/k
 mse = mean_squared_error(y_test, failures_predictions_test)
-mae = mean_absolute_error(y_test, failures_predictions_test)
+ae = mean_absolute_error(y_test, failures_predictions_test)
 meop = np.sum(np.abs(p_data - r_data)) / (k - p + 1)
 # Calculate Predictive-ratio risk (PRR)
 prr = np.sum((failures_predictions_test - y_test) / failures_predictions_test)
@@ -83,7 +83,7 @@ print("-------------------------------------------------------------------")
 print("Bias:", round(bias, 3))
 print(f"Mean Squared Error (MSE): {round(mse, 3)}")
 print(f"Mean Error of Prediction (MEOP): {round(meop, 3)}")
-print(f"Absolute Error (AE): {round(mae, 3)}")
+print(f"Absolute Error (AE): {round(ae, 3)}")
 print(f"Noise (Standard Deviation of Residuals): {round(noise, 3)}")
 print(f"Percent Relative Error (PRR): {round(prr, 3)}")
 print(f"Variance: {round(variance, 3)}")

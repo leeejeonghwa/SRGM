@@ -49,11 +49,12 @@ mse = mean_squared_error(r_data, p_data)
 meop = np.sum(np.abs(failures_predictions_test - y_test)) / (len(X_test) - p + 1)
 
 # Calculate Absolute Error (AE)
-mae = np.mean(np.abs(p_data - r_data))
+ae = np.mean(np.abs(p_data - r_data))
 
 # Calculate Percent Relative Error (PRR)
 prr = np.sum((p_data - r_data) / p_data)
-# Calculate Variance
+# Calculate Varianc
+# e
 variance_numerator = np.sum((failures_predictions_test - y_test - bias)**2)
 variance_denominator = len(X_test) - 1
 variance = np.sqrt(variance_numerator / variance_denominator)
@@ -93,7 +94,7 @@ print("-------------------------------------------------------------------")
 print("Bias:", round(bias, 3))
 print(f"Mean Squared Error (MSE): {round(mse, 3)}")
 print(f"Mean Error of Prediction (MEOP): {round(meop, 3)}")
-print(f"Absolute Error (AE): {round(mae, 3)}")
+print(f"Absolute Error (AE): {round(ae, 3)}")
 print(f"Noise (Standard Deviation of Residuals): {round(noise, 3)}")
 print(f"Percent Relative Error (PRR): {round(prr, 3)}")
 print(f"Variance: {round(variance, 3)}")
