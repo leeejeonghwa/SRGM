@@ -100,5 +100,6 @@ print(f"Variance: {round(variance, 3)}")
 print(f"R-squared (Rsq): {round(rsq, 3)}")
 print(f"True Skill Statistic (TS): {round(ts, 3)}")
 
-M11_results_list = [round(bias, 3), round(mse, 3), round(meop, 3), round(mae, 3), round(noise, 3), round(prr, 3), round(variance, 3), round(rsq, 3), round(ts, 3)]
-print(M11_results_list)
+
+M11_results_list = [round(bias, 3), round(mse, 3),round(meop, 3),round(ae, 3),round(noise, 3),round(prr, 3),round(variance, 3),round(rsq, 3),round(ts, 3)]
+

@@ -40,7 +40,7 @@ p= 2 #파라미터의 갯수
 
 bias = np.sum(p_data - r_data)/k
 mse = mean_squared_error(y_test, failures_predictions_test)
-mae = mean_absolute_error(y_test, failures_predictions_test)
+ae = mean_absolute_error(y_test, failures_predictions_test)
 meop = np.sum(np.abs(p_data - r_data)) / (k - p + 1)
 # Calculate Predictive-ratio risk (PRR)
 prr = np.sum((failures_predictions_test - y_test) / failures_predictions_test)
@@ -88,12 +88,11 @@ print("-------------------------------------------------------------------")
 print("Bias:", round(bias, 3))
 print(f"Mean Squared Error (MSE): {round(mse, 3)}")
 print(f"Mean Error of Prediction (MEOP): {round(meop, 3)}")
-print(f"Absolute Error (AE): {round(mae, 3)}")
+print(f"Absolute Error (AE): {round(ae, 3)}")
 print(f"Noise (Standard Deviation of Residuals): {round(noise, 3)}")
 print(f"Percent Relative Error (PRR): {round(prr, 3)}")
 print(f"Variance: {round(variance, 3)}")
 print(f"R-squared (Rsq): {round(rsq, 3)}")
 print(f"True Skill Statistic (TS): {round(ts, 3)}")
 
-M2_results_list = [round(bias, 3), round(mse, 3),round(meop, 3),round(mae, 3),round(noise, 3),round(prr, 3),round(variance, 3),round(rsq, 3),round(ts, 3)]
-print(M2_results_list)
+M2_results_list = [round(bias, 3), round(mse, 3),round(meop, 3),round(ae, 3),round(noise, 3),round(prr, 3),round(variance, 3),round(rsq, 3),round(ts, 3)]
